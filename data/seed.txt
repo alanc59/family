@@ -1,0 +1,118 @@
+-- Drop and recreate the database
+DROP DATABASE IF EXISTS family_db;
+CREATE DATABASE family_db;
+USE family_db;
+
+-- People table
+CREATE TABLE person (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    birthdate DATE NULL,
+    deathdate DATE NULL,
+    biography TEXT NULL
+);
+
+-- Spouse relationships (marriages/partnerships)
+CREATE TABLE marriage (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    person1_id INT NOT NULL,
+    person2_id INT NOT NULL,
+    FOREIGN KEY (person1_id) REFERENCES person(id),
+    FOREIGN KEY (person2_id) REFERENCES person(id)
+);
+
+-- Parent → Child relationships
+CREATE TABLE parent_child (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    parent_id INT NOT NULL,
+    child_id INT NOT NULL,
+    FOREIGN KEY (parent_id) REFERENCES person(id),
+    FOREIGN KEY (child_id) REFERENCES person(id)
+);
+
+-- ===============================
+-- Insert People
+-- ===============================
+INSERT INTO person (name, birthdate, deathdate, biography) VALUES
+('George', '1936-04-25', '1999-12-31', 'George was a bricklayer by trade.'),
+('Joan', '1937-11-10', NULL, 'Joan raised five children and loves reading.'),
+('Alan', '1959-10-10', NULL, 'Alan was a IT Architect'),
+('Jackie', '1960-05-06', NULL, 'Jackie has a doctorate and taught Nursing at Manchester University'),
+('Robert', '1964-06-26', '2015-06-06', 'Robert was the life and soul of the party'),
+('Elaine', '1966-02-02', NULL, 'Elaine works in a hospital.'),
+('Gillian', '1968-06-03', NULL, 'Gillian works in a hospital.'),
+('Edward', '1971-05-05', NULL, 'Edward is a research chemist'),
+('Sean', '1993-07-19', NULL, 'Sean has a doctorate in Maths and works in IT'),
+('GeorgeF', '1915-01-01', '1981-01-01', 'Bricklayer'),
+('Fanny', '1885-01-01', '1961-01-01', 'Housewife'),
+('Elsie', '1916-01-01', '1989-01-01', 'Housewife'),
+('Mark', '1885-01-01', '1940-01-01', 'Baker'),
+('Severtus', '1806-01-01', '1905-01-01', 'Seaman'),
+('SevertusWife', '1806-01-01', '1935-01-01', 'Hotel Manager'),
+('Grace', '1938-01-01', NULL, 'Social Worker.');
+
+-- ===============================
+-- Insert Marriages
+-- ===============================
+-- Severtus & SevertusWife
+INSERT INTO marriage (person1_id, person2_id) VALUES 
+((SELECT id FROM person WHERE name='Severtus'), 
+(SELECT id FROM person WHERE name='SevertusWife'));
+
+-- Mark & Fanny
+INSERT INTO marriage (person1_id, person2_id) VALUES 
+((SELECT id FROM person WHERE name='Mark'), 
+(SELECT id FROM person WHERE name='Fanny'));
+
+-- GeorgeF & Elsie
+INSERT INTO marriage (person1_id, person2_id) VALUES 
+((SELECT id FROM person WHERE name='GeorgeF'), 
+(SELECT id FROM person WHERE name='Elsie'));
+
+-- George & Joan
+INSERT INTO marriage (person1_id, person2_id) VALUES 
+((SELECT id FROM person WHERE name='George'), 
+(SELECT id FROM person WHERE name='Joan'));
+
+-- Alan & Jackie
+INSERT INTO marriage (person1_id, person2_id) VALUES 
+((SELECT id FROM person WHERE name='Alan'), 
+(SELECT id FROM person WHERE name='Jackie'));
+
+-- ===============================
+-- Insert Parent-Child Relationships
+-- ===============================
+-- Severtus & SevertusWife's kids: GeorgeF
+INSERT INTO parent_child (parent_id, child_id) VALUES
+((SELECT id FROM person WHERE name='Severtus'), (SELECT id FROM person WHERE name='Fanny')), 
+((SELECT id FROM person WHERE name='SevertusWife'), (SELECT id FROM person WHERE name='Fanny'));
+
+-- Mark & Fanny's kids: GeorgeF
+INSERT INTO parent_child (parent_id, child_id) VALUES
+((SELECT id FROM person WHERE name='Mark'), (SELECT id FROM person WHERE name='GeorgeF')), 
+((SELECT id FROM person WHERE name='Fanny'), (SELECT id FROM person WHERE name='GeorgeF'));
+
+-- GeorgeF & Elsie's kids: George, Grace
+INSERT INTO parent_child (parent_id, child_id) VALUES
+((SELECT id FROM person WHERE name='GeorgeF'), (SELECT id FROM person WHERE name='George')), 
+((SELECT id FROM person WHERE name='Elsie'), (SELECT id FROM person WHERE name='George')),
+((SELECT id FROM person WHERE name='GeorgeF'), (SELECT id FROM person WHERE name='Grace')), 
+((SELECT id FROM person WHERE name='Elsie'), (SELECT id FROM person WHERE name='Grace'));
+
+-- George & Joan’s kids: Alan, Robert, Elaine, Gillian, Edward
+INSERT INTO parent_child (parent_id, child_id) VALUES
+((SELECT id FROM person WHERE name='George'), (SELECT id FROM person WHERE name='Alan')),
+((SELECT id FROM person WHERE name='Joan'), (SELECT id FROM person WHERE name='Alan')),
+((SELECT id FROM person WHERE name='George'), (SELECT id FROM person WHERE name='Robert')), 
+((SELECT id FROM person WHERE name='Joan'), (SELECT id FROM person WHERE name='Robert')),
+((SELECT id FROM person WHERE name='George'), (SELECT id FROM person WHERE name='Elaine')), 
+((SELECT id FROM person WHERE name='Joan'), (SELECT id FROM person WHERE name='Elaine')),
+((SELECT id FROM person WHERE name='George'), (SELECT id FROM person WHERE name='Gillian')), 
+((SELECT id FROM person WHERE name='Joan'), (SELECT id FROM person WHERE name='Gillian')),
+((SELECT id FROM person WHERE name='George'), (SELECT id FROM person WHERE name='Edward')), 
+((SELECT id FROM person WHERE name='Joan'), (SELECT id FROM person WHERE name='Edward'));
+
+-- Alan & Jackie’s kids: Sean
+INSERT INTO parent_child (parent_id, child_id) VALUES
+((SELECT id FROM person WHERE name='Alan'), (SELECT id FROM person WHERE name='Sean')), 
+((SELECT id FROM person WHERE name='Jackie'), (SELECT id FROM person WHERE name='Sean'));
