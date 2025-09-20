@@ -1,0 +1,2 @@
+mysql -p family_db < schema_with_data.sql
+

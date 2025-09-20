@@ -1,17 +1,142 @@
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;   /* horizontal center */
-  justify-content: flex-start;
-  padding: 20px;
-  overflow: auto;
+/* Global styles */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #e9eef6; /* soft grey-blue */
+  color: #2c3e50;
 }
 
-.tree-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  height: 100%;
+/* Layout wrapper: 3 columns */
+.app-container {
+  display: grid;
+  grid-template-columns: 250px 1fr 300px;
+  grid-template-rows: 100vh;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
 }
+
+/* Panel common styles */
+.panel {
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Distinct panel backgrounds */
+.left-panel {
+  background: #f0f6ff; /* soft blue */
+}
+
+.center-panel {
+  background: #ffffff; /* white for clarity */
+}
+
+.right-panel {
+  background: #fff8f0; /* soft beige */
+}
+
+/* Panel headings */
+.panel h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.2em;
+  color: #34495e;
+  border-bottom: 2px solid #d1d9e6;
+  padding-bottom: 6px;
+}
+
+/* People list */
+#people-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#people-list li {
+  padding: 8px 10px;
+  margin: 4px 0;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+#people-list li:hover {
+  background: #eaf2ff;
+  color: #1a73e8;
+}
+
+#people-list li.selected {
+  background: #1a73e8;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Family tree */
+#tree-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  border-radius: 8px;
+  background: #f9fbfd;
+}
+
+/* Tree title */
+#tree-title {
+  text-align: center;
+  margin: 0 0 10px 0;
+  color: #1a73e8;
+}
+
+/* Family tree node style */
+.family-node {
+  fill: #1a73e8; /* blue default */
+  stroke: #1558b0;
+  stroke-width: 2px;
+  rx: 8;
+  ry: 8;
+}
+
+.family-node.selected {
+  fill: #e67e22; /* orange highlight */
+  stroke: #ca5d0d;
+}
+
+.family-text {
+  fill: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  text-anchor: middle;
+  alignment-baseline: middle;
+}
+
+/* Details panel */
+.details {
+  line-height: 1.6;
+}
+
+.details p {
+  margin: 0.4em 0;
+}
+
+.details h4 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  color: #1a73e8;
+}
+
+.details .bio {
+  margin-top: 0.75em;
+  padding: 10px;
+  background: #f1f5fb;
+  border-left: 4px solid #1a73e8;
+  border-radius: 6px;
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
